@@ -3,9 +3,6 @@ const app = express();
 const fs = require('fs');
 const path = require('path');
 
-// CONSTANTS
-const directoryPath = process.env.DIRECTORY_PATH;
-
 // Imports
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
@@ -14,6 +11,9 @@ const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const { SitemapStream, streamToPromise } = require('sitemap');
 const { createGzip } = require('zlib');
+
+// CONSTANTS
+const directoryPath = process.env.DIRECTORY_PATH;
 
 // Middlewares
 app.use(express.urlencoded({ extended: true }));
