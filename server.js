@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(__dirname + '/client/build'));
 app.use(cookieParser());
-app.use('/audio', express.static('/Users/Dylan Caldwell/Desktop/Studio Projects/Audio Book Player/audio'));
+app.use('/audio', express.static(directoryPath));
 
 // Main route
 app.get('/', (req, res) => {

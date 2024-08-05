@@ -20,7 +20,7 @@ class Book extends Component {
         console.log(directory);
         return (
             <div className={'Book ' + (this.state.active ? 'active' : '')} key={this.props.key} style={{backgroundColor: 'grey', margin: "2px 0", height: 'fit-content', overflow: 'hidden'}} onClick={this.toggleActive}>
-                <h2 style={{height: 30}}>{directory.folder}</h2>
+                <h2 style={{height: 'fit-content'}}>{directory.folder}</h2>
                 {(this.state.active ? (
                     <ul style={{margin: '5px 0'}}>
                         {directory.files.map((file, fileIndex) => (

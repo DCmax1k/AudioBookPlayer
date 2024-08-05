@@ -32,7 +32,7 @@ class AudioPlayer extends Component {
 
     render() {
         return (
-            <div className="AudioPlayer" style={{width: 360, overflowY: 'scroll', overflowX: 'hidden'}}>
+            <div className="AudioPlayer" style={{width: 360, maxHeight: '95vh', overflowY: 'scroll', overflowX: 'hidden'}}>
                 <h1>Books</h1>
                 {this.state.sorted.map((directory, index) => (
                     <Book key={index} directory={directory} directoryPath={directoryPath} />
