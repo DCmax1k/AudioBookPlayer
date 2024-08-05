@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 // CONSTANTS
-const directoryPath = 'C:\\Users\\Dylan Caldwell\\Desktop\\Studio Projects\\Audio Book Player\\audio';
+const directoryPath = process.env.DIRECTORY_PATH;
 
 // Imports
 require('dotenv').config();

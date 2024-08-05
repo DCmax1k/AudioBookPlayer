@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Book from './Book';
 
-const directoryPath = 'C:\\Users\\Dylan Caldwell\\Desktop\\Studio Projects\\Audio Book Player\\audio';
+const directoryPath = process.env.DIRECTORY_PATH;
 
 class AudioPlayer extends Component {
     constructor(props) {
