@@ -10,6 +10,7 @@ class Dashboard extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            activity: [],
             user: null,
             loggedIn: false,
             loadingText: 'Logging in...',
@@ -21,6 +22,7 @@ class Dashboard extends Component {
         this.customAlert = this.customAlert.bind(this);
         this.applyDecay = this.applyDecay.bind(this);
         this.closeAlert = this.closeAlert.bind(this);
+        this.getActivity = this.getActivity.bind(this);
 
     }
 
@@ -41,12 +43,14 @@ class Dashboard extends Component {
                             loggedIn: true,
                         });
                         setTimeout(() => {
+                            if (user.rank === 'admin') this.getActivity();
                             this.setState({
                                 fadeIn: true,
                             });
                         }, 1);
                     }, 300);
                 }, 600);
+
             } else {
                 this.setState({
                     loadingText: checkLogin.message,
@@ -55,13 +59,24 @@ class Dashboard extends Component {
                     window.location.href = '/';
                 }, 2000);
             }
+            
 
         } catch(err) {
             console.error(err);
         }
     }
 
+    async getActivity() {
+        const response = await sendData('/dashboard/getactivity', {});
+        if (response.status === 'success') {
+            console.log(response.data);
+            this.setState({
+                activity: response.data,
+            });
+        }
+    }
 
+    
 
     async logout() {
         try {
@@ -158,6 +173,14 @@ class Dashboard extends Component {
                     <div style={{display: 'flex'}}>
                         {(this.state.user.rank === 'admin') ? (<Signup />) : (null)}
                         <AudioPlayer />
+                        {(this.state.user.rank === 'admin') ? (<div className='Activity' style={{color: 'black'}}>
+                            {this.state.activity.reverse().map(element => {
+                                console.log(element);
+                                return (<div>
+                                    {element.date} {element.time} {element.user} {element.message}
+                                </div>)
+                            })}
+                        </div>) : (null)}
                     </div>
                 </div>
             </div>

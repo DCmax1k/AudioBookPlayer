@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import sendData from './util/sendData';
 
 class Book extends Component {
     constructor(props) {
@@ -15,6 +16,11 @@ class Book extends Component {
         })
     }
 
+    async sendActivity(msg) {
+        console.log('sending');
+        const response = await sendData('/dashboard/activity', {message: msg})
+    }
+
     render() {
         const { directory, directoryPath } = this.props;
         console.log(directory);
@@ -26,7 +32,7 @@ class Book extends Component {
                         {directory.files.map((file, fileIndex) => (
                             <div>
                                 {file}
-                                <audio key={fileIndex} controls>
+                                <audio key={fileIndex} controls onPlay={() => {this.sendActivity("started playing " + file + ", from " + directory.folder)}}>
                                     <source src={`/audio/${directory.folder}/${file}`} type='audio/mp3'></source>
                                 </audio>
                             </div>
@@ -34,7 +40,7 @@ class Book extends Component {
                         ))}
                     </ul>
                 ) : (<div>
-                    Click here to load audio.
+                    Click the title to load audio.
                 </div>))}
                 
             </div>
