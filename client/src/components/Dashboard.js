@@ -149,6 +149,8 @@ class Dashboard extends Component {
         this.setState({
             currentScreen: screen,
         });
+        if (screen === 'activity') this.getActivity();
+        
     }
 
     render() {
