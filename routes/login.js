@@ -17,8 +17,12 @@ function validateUsername(username) {
     return username.length >= 1;
 }
 
-router.post('/createaccount', async (req, res) => {
+router.post('/createaccount', authToken, async (req, res) => {
     try {
+        // Only admin can create acccounts
+        const adminuser = await User.findById(req.userId);
+        if (adminuser.rank !== 'admin') return res.json();
+
         const {  username, email, password} = req.body;
         const checkUser = await User.findOne({ username });
         if (checkUser) {

@@ -16,6 +16,7 @@ class Dashboard extends Component {
             loadingText: 'Logging in...',
             fadeIn: false,
             alerts: [],
+            currentScreen: 'audiobooks',
         };
         this.loadingRef = React.createRef();
 
@@ -23,6 +24,7 @@ class Dashboard extends Component {
         this.applyDecay = this.applyDecay.bind(this);
         this.closeAlert = this.closeAlert.bind(this);
         this.getActivity = this.getActivity.bind(this);
+        this.changeAdminScreen = this.changeAdminScreen.bind(this);
 
     }
 
@@ -69,7 +71,6 @@ class Dashboard extends Component {
     async getActivity() {
         const response = await sendData('/dashboard/getactivity', {});
         if (response.status === 'success') {
-            console.log(response.data);
             this.setState({
                 activity: response.data,
             });
@@ -144,6 +145,12 @@ class Dashboard extends Component {
         }, 3000);
     }
 
+    changeAdminScreen(screen) {
+        this.setState({
+            currentScreen: screen,
+        });
+    }
+
     render() {
 
         return this.state.loggedIn ? (
@@ -162,25 +169,30 @@ class Dashboard extends Component {
                 </div>
 
                 {/* Body */}
-                <div className='body'>
+                <div className='body' style={{width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                     
-                    {this.state.user.username} where my money nib ba
+                    Logged in as {this.state.user.username}.
                     <br />
-                    {this.state.user.rank}
                     <div onClick={this.logout} className='LogoutBtn' style={{height: 50, width: 200, borderRadius: 50, backgroundColor: '#5781C0', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'white'}}>
                         Logout
                     </div>
-                    <div style={{display: 'flex'}}>
-                        {(this.state.user.rank === 'admin') ? (<Signup />) : (null)}
-                        <AudioPlayer />
-                        {(this.state.user.rank === 'admin') ? (<div className='Activity' style={{color: 'black'}}>
+                    <div style={{display: 'flex', width: '100%', minWidth: 360, flexDirection: 'column', alignItems: 'center'}}>
+
+                        {(this.state.user.rank === 'admin') ? (<div style={{width: 400, display: 'flex', justifyContent: 'space-around'}}>
+                            <div onClick={() => this.changeAdminScreen('audiobooks')} style={{cursor: 'pointer', padding: '5px', backgroundColor: 'grey', color: 'white', margin: 5, borderRadius: 5}}>Audio Books</div>
+                            <div onClick={() => this.changeAdminScreen('activity')} style={{cursor: 'pointer', padding: '5px', backgroundColor: 'grey', color: 'white', margin: 5, borderRadius: 5}}>Activity</div>
+                            <div onClick={() => this.changeAdminScreen('createaccount')} style={{cursor: 'pointer', padding: '5px', backgroundColor: 'grey', color: 'white', margin: 5, borderRadius: 5}}>Create Account</div>
+                        </div>) : (null)}
+
+                        {(this.state.currentScreen === 'audiobooks') ? (<AudioPlayer />) : (this.state.currentScreen === 'activity') ? (<div className='Activity' style={{color: 'black', width: '100%'}}>
                             {this.state.activity.reverse().map(element => {
-                                console.log(element);
                                 return (<div>
                                     {element.date} {element.time} {element.user} {element.message}
                                 </div>)
                             })}
-                        </div>) : (null)}
+                        </div>) : (this.state.currentScreen === 'createaccount' ? (<Signup />) : null)}
+
+
                     </div>
                 </div>
             </div>
