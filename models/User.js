@@ -17,6 +17,14 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    lastPlayed: {
+        type: Object,
+        default: {
+            folder: '',
+            file: '',
+            duration: 0,
+        },
+    },
     rank: {
         type: String,
         default: "user",

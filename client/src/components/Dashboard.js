@@ -25,13 +25,17 @@ class Dashboard extends Component {
         this.closeAlert = this.closeAlert.bind(this);
         this.getActivity = this.getActivity.bind(this);
         this.changeAdminScreen = this.changeAdminScreen.bind(this);
+        this.setUser = this.setUser.bind(this);
+        this.sendLastPlayed = this.sendLastPlayed.bind(this);
+        this.componentWillUnmount = this.componentWillUnmount.bind(this);
 
     }
 
     async componentDidMount() {
         try {
+            window.addEventListener('beforeunload', this.sendLastPlayed);
             const checkLogin = await sendData('/auth', {});
-            //const checkLogin = {user: {username: 'DCmax1k', plus: false, settings: {emailVerified: false,}, email: 'dylan@digitalcaldwell.com', rank: 'admin' },status: 'success',};
+            //const checkLogin = {user: {username: 'client', lastPlayed: {folder: 'Book 1', file: 'lythnx.mp3', duration: 30}, plus: false, settings: {emailVerified: false,}, email: 'dylan@digitalcaldwell.com', rank: 'admin' },status: 'success',};
             if (checkLogin.status === 'success') {
                 const user = checkLogin.user;
                 this.setState({
@@ -68,6 +72,20 @@ class Dashboard extends Component {
         }
     }
 
+    componentWillUnmount() {
+     
+        window.removeEventListener('beforeunload', this.sendLastPlayed);
+
+    }
+
+    sendLastPlayed() {
+        // Send last played file and its duration to backend
+        const {folder, files, duration } = this.state.user.lastPlayed;
+        const lastPlayed = {folder, file: files[0], duration,}
+        sendData('/dashboard/setlastplayed', {lastPlayed,});
+        console.log('sent last played');
+    }
+
     async getActivity() {
         const response = await sendData('/dashboard/getactivity', {});
         if (response.status === 'success') {
@@ -77,7 +95,11 @@ class Dashboard extends Component {
         }
     }
 
-    
+    setUser(user) {
+        this.setState({
+            user,
+        });
+    }
 
     async logout() {
         try {
@@ -180,13 +202,21 @@ class Dashboard extends Component {
                     </div>
                     <div style={{display: 'flex', width: '100%', minWidth: 360, flexDirection: 'column', alignItems: 'center'}}>
 
+                        {/* Admin buttons */}
                         {(this.state.user.rank === 'admin') ? (<div style={{width: 400, display: 'flex', justifyContent: 'space-around'}}>
                             <div onClick={() => this.changeAdminScreen('audiobooks')} style={{cursor: 'pointer', padding: '5px', backgroundColor: 'grey', color: 'white', margin: 5, borderRadius: 5}}>Audio Books</div>
                             <div onClick={() => this.changeAdminScreen('activity')} style={{cursor: 'pointer', padding: '5px', backgroundColor: 'grey', color: 'white', margin: 5, borderRadius: 5}}>Activity</div>
                             <div onClick={() => this.changeAdminScreen('createaccount')} style={{cursor: 'pointer', padding: '5px', backgroundColor: 'grey', color: 'white', margin: 5, borderRadius: 5}}>Create Account</div>
                         </div>) : (null)}
 
-                        {(this.state.currentScreen === 'audiobooks') ? (<AudioPlayer />) : (this.state.currentScreen === 'activity') ? (<div className='Activity' style={{color: 'black', width: '100%'}}>
+                        {/* User buttons */}
+                        {(this.state.user.rank === 'user') ? (<div style={{width: 400, display: 'flex', justifyContent: 'space-around'}}>
+                            <div onClick={() => this.changeAdminScreen('audiobooks')} style={{cursor: 'pointer', padding: '5px', backgroundColor: 'grey', color: 'white', margin: 5, borderRadius: 5}}>Audio Books</div>
+                            <div onClick={() => this.changeAdminScreen('activity')} style={{cursor: 'pointer', padding: '5px', backgroundColor: 'grey', color: 'white', margin: 5, borderRadius: 5}}>My activity</div>
+                        </div>) : (null)}
+
+                        {/* Other screens */}
+                        {(this.state.currentScreen === 'audiobooks') ? (<AudioPlayer user={this.state.user} setUser={this.setUser} />) : (this.state.currentScreen === 'activity') ? (<div className='Activity' style={{color: 'black', width: '100%'}}>
                             {this.state.activity.reverse().map(element => {
                                 return (<div>
                                     {element.date} {element.time} {element.user} {element.message}
