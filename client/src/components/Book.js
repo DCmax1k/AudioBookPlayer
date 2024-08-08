@@ -38,9 +38,10 @@ class Book extends Component {
         if (fileNameAndTime.includes('#')) {
             fileName = fileNameAndTime.split('#')[0];
         }
+        const file = fileName.replace(/%20/g, " ");
         const lastPlayed = {
             folder: this.props.directory.folder,
-            files: [fileName],
+            files: [file],
             duration: e.target.currentTime,
         }
         this.setState({
