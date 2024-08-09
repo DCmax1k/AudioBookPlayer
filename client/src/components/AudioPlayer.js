@@ -101,6 +101,7 @@ class AudioPlayer extends Component {
             <div className="AudioPlayer" style={{minWidth: 360, width: '90vw', maxHeight: '95vh', overflowY: 'scroll', overflowX: 'hidden'}}>
                 <h1 style={{height: 'fit-content', fontSize: 28, color: '#333', width: '100%'}}>Last Played - <span style={{color: '#5881c1'}}>{this.state.lastPlayed.folder}, {this.state.lastPlayed.files[0]}</span> </h1>
                 <h1 style={{height: 'fit-content', fontSize: 28, color: '#333', width: '100%'}}>Resume at <span style={{color: '#5881c1'}}>{this.formatSecondsToTime(this.state.lastPlayed.duration)}</span></h1>
+                <h1 style={{height: 'fit-content', fontSize: 28, color: '#333', width: '100%'}}>Resume currently broken for mobile<span style={{color: '#5881c1'}}> Fix coming soon</span></h1>
                 {this.state.lastPlayedSource === '' ? "Your most recent played audio will appear here." : (<Book directory={this.state.lastPlayed} user={this.props.user} setLastPlayed={this.setLastPlayed} lastPlayed={this.state.lastPlayed} isRecentPlayed={true} />)}
                 <h1 style={{height: 'fit-content', fontSize: 28, color: '#333', width: '100%'}}>All Audio Books</h1>
                 <div style={{height: 40, width: '100%', display: 'flex', position: 'relative'}}>
